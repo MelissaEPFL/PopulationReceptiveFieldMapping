@@ -1,14 +1,7 @@
 
 KbName('UnifyKeyNames');
 
-% Setup keycode structure for typical keys
-KeyCodes.Left = KbName('leftarrow');
-KeyCodes.Up = KbName('uparrow');
-KeyCodes.Right = KbName('rightarrow');
-KeyCodes.Down = KbName('downarrow');
-KeyCodes.Space = KbName('space');
-KeyCodes.Enter = KbName('return');
-KeyCodes.Escape = KbName('escape');
-
-
-
+% Setup keycode structure for easier call
+KeyCodes.One = KbName('1!'); %For button press
+KeyCodes.Five = KbName('5%'); %For the scanner trigger
+KeyCodes.Escape = KbName('escape'); %To exit the script

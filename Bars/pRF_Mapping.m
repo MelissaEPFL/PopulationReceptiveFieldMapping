@@ -16,9 +16,10 @@ info = inputdlg({'Subject ID','N runs'});
 NRuns = str2num(NRuns);
 
 EyeTracking = false; %Use eyetracking ?
-Emulation = true; %Emulate scanner trigger ?
+Emulation = false; %Emulate scanner trigger ?
 
 %Define and if required create SaveFolder
+%SavePath = '..\Data  '
 SavePath = 'L:\Experimental Data\Melissa Faggella\4_fMRI_EEG_Forward_modelling\Results';
 SubjPath = [SavePath filesep Subject];
 if ~exist(SubjPath, 'dir')
@@ -31,11 +32,6 @@ for run = 1:NRuns
     
     Bars(Subject, EyeTracking, Emulation, SubjPath);
 
-    %MRI operator-supervised pause: press key to continue
-    % if run < NRuns 
-    %     disp(['OPERATOR MUST PRESS ANY KEY TO PROCEED - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -']);
-    %     KbWait; % Wait for any keypress 
-    % end
 end
 
 

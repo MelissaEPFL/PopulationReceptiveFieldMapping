@@ -5,16 +5,15 @@
 disp('Waiting for first scanner trigger (TTL)...');
 
 % Wait for rising edge on input line
-prev = io32(io32, Parameters.Scanner_Trigger_Address);
-
 while true
-    val = io32(io32, Parameters.Scanner_Trigger_Address);
 
-    if bitand(val, Parameters.Scanner_Trigger_Bit) && ~bitand(prev, Parameters.Scanner_Trigger_Bit)
+    [keyIsDown,secs,keyCode] = KbCheck;
 
+    if keyCode(KeyCodes.Five)==1 %In BBL the scanner pulse is detected as keypress 5
         disp('Scanner trigger received!');
         break;
     end
-    prev = val;
-    WaitSecs(0.001); %1 ms polling interval
+
+    %1 ms polling interval
+    WaitSecs(0.001); 
 end

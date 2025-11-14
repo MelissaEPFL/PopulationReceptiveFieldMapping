@@ -13,8 +13,8 @@ Stim = 'Ripples'; % Use ripple stimulus
 Parameters = struct;    % Initialize the parameters variable
 
 %% Engine & Screen parameters
-Parameters.Screen = 0;    % Main screen
-Parameters.Resolution = [0 0 1920 1080];   % Resolution
+Parameters.Screen = 0;    % Main screen (For BBL IRM screen = 2)
+Parameters.Resolution = [0 0 1920 1080];   % Resolution (At BBL its 1920 x 1080)
 Parameters.Foreground = [0 0 0];  % Foreground colour
 Parameters.Background = [127 127 127];    % Background colour
 Parameters.FontSize = 30;   % Size of font
@@ -25,7 +25,7 @@ Parameters.TR = 1;   % Seconds per volume
 if Emulation
     Parameters.Dummies = 0;   % No dummy volumes
 else
-    Parameters.Dummies = 10;   % Dummy volumes (the scanner takes time to reach baseline functioning)
+    Parameters.Dummies = 10;   % Dummy volumes (no need in BBL)
 end
 Parameters.Overrun = 0;   % Dummy volumes at the end
 Parameters.Eye_tracker = EyeTracking; % Using eye tracker?

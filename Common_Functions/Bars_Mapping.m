@@ -183,7 +183,7 @@ disp(' ');
 if Emulate %Wait for keypress if in debug
     WaitSecs(0.1);
     KbWait; % Wait for any keypress
-    [bkp bkt bk] = KbCheck;  %REturns which key, timestamp and          
+    [bkp bkt bk] = KbCheck;  %Returns which key, timestamp       
 else %Otherwise wait on the scanner TTL pulse (trigger)
     TriggerExperiment;
     bk = zeros(1,256);
@@ -382,9 +382,11 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
             [Keypr KeyTime Key] = KbCheck;
 
             if Keypr % When a key is pressed
-                k = 1; % Starts a refractory period of 2 x Event_Duration
-                Behaviour.Response = [Behaviour.Response; find(Key,1)]; %We store key 
-                Behaviour.ResponseTime = [Behaviour.ResponseTime; KeyTime - Start_of_Expmt]; % We store RT
+                if keyCode(KeyCodes.One)==1
+                    k = 1; % Starts a refractory period of 2 x Event_Duration
+                    Behaviour.Response = [Behaviour.Response; find(Key,1)]; %We store key 
+                    Behaviour.ResponseTime = [Behaviour.ResponseTime; KeyTime - Start_of_Expmt]; % We store RT
+                end
             end
         end
         TrialOutput.Key = Key; %Stores which key was pressed 
