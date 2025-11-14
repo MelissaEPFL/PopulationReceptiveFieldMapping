@@ -1,4 +1,4 @@
-function Bars_Mapping(Parameters, Emulate, SaveAps, SavePath)
+function Bars_Mapping(Parameters, Emulate, SaveAps, SubjPath)
 % Runs the drifting bar protocol for mapping population receptive fields.
 
 %% Initialize randomness & keycodes
@@ -77,7 +77,7 @@ if Parameters.Eye_tracker
     Eye_params = EyelinkInitDefaults(Win);
 
     %Save Eyelink data to
-    EyetrackingFile = [SavePath filesep Parameters.Session_name '_Eyetracker.edf'];
+    EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
     Eyelink('Openfile', EyetrackingFile);  % Open a file on the eyetracker
 
     %Starts recording and check status
@@ -270,12 +270,18 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
         TrialOutput.Eye = [];
     end
 
+    %Send a trigger to eyelink at the beggining of every sweep
+    outp(Parameters.Scanner_Trigger_Address, 16);
+
     %% Stimulation sequence
 
     %Condition setup
     CurrCondit = Parameters.Conditions(Trial); %Which orientation
     disp(' '); disp([Trial CurrCondit]); %Logs condition in console
     CurrVolume = 1; PrevVolume = 0; %Used to track acquired volumes
+
+    %Close trigger eyelink
+    outp(Parameters.Scanner_Trigger_Address, 0);
 
     %Each sweep we acquire 25 volumes (one volume per step)
     while CurrVolume <= Parameters.Volumes_per_Trial  
@@ -468,7 +474,7 @@ DrawFormattedText(Win, 'Sauvegarde des données en cours...', 'center', 'center'
 Screen('Flip', Win);
 
 %Saves all workspace variables in a .mat file
-save([SavePath filesep Parameters.Session_name]);
+save([SubjPath filesep Parameters.Session_name]);
 
 %% Shut down processes
 
@@ -509,5 +515,5 @@ disp(' ');
 %% Save stimulus movie
 if SaveAps == 2
     ApFrm = uint8(ApFrm);
-    save([SavePath filesep Parameters.Session_name '_stimulus'], 'ApFrm');
+    save([SubjPath filesep Parameters.Session_name '_stimulus'], 'ApFrm');
 end
