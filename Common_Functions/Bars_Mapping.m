@@ -227,6 +227,9 @@ if bk(KeyCodes.Escape) % Abort if Escape is pressed during standby phase
         Eyelink('CloseFile');
         Eyelink('ShutDown');
     end
+
+    assignin('base', 'ESCAPE_ABORT', true); %Used to exit the main loop and properly exit the script
+
     return %Exit script
 end
 
@@ -269,9 +272,11 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
     if Parameters.Eye_tracker
         TrialOutput.Eye = [];
     end
-
-    %Send a trigger to eyelink at the beggining of every sweep
-    outp(Parameters.Scanner_Trigger_Address, 16);
+    
+    if Emulate == false
+        %Send a trigger to eyelink at the beggining of every sweep
+        outp(Parameters.Scanner_Trigger_Address, 16);
+    end
 
     %% Stimulation sequence
 
@@ -280,8 +285,10 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
     disp(' '); disp([Trial CurrCondit]); %Logs condition in console
     CurrVolume = 1; PrevVolume = 0; %Used to track acquired volumes
 
-    %Close trigger eyelink
-    outp(Parameters.Scanner_Trigger_Address, 0);
+    if Emulate == false
+        %Close trigger eyelink
+        outp(Parameters.Scanner_Trigger_Address, 0);
+    end
 
     %Each sweep we acquire 25 volumes (one volume per step)
     while CurrVolume <= Parameters.Volumes_per_Trial  
@@ -388,7 +395,7 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
             [Keypr KeyTime Key] = KbCheck;
 
             if Keypr % When a key is pressed
-                if keyCode(KeyCodes.One)==1
+                if Key(KeyCodes.One)==1
                     k = 1; % Starts a refractory period of 2 x Event_Duration
                     Behaviour.Response = [Behaviour.Response; find(Key,1)]; %We store key 
                     Behaviour.ResponseTime = [Behaviour.ResponseTime; KeyTime - Start_of_Expmt]; % We store RT
@@ -433,6 +440,9 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
                 Eyelink('CloseFile');
                 Eyelink('ShutDown');
             end
+
+            assignin('base', 'ESCAPE_ABORT', true); %Used to exit the main loop and properly exit the script
+
             return %quit the script
         end
     

@@ -16,7 +16,7 @@ info = inputdlg({'Subject ID','N runs'});
 NRuns = str2num(NRuns);
 
 EyeTracking = false; %Use eyetracking ?
-Emulation = false; %Emulate scanner trigger ?
+Emulation = true; %Emulate scanner trigger ?
 
 %Define and if required create SaveFolder
 %SavePath = '..\Data  '
@@ -27,10 +27,14 @@ if ~exist(SubjPath, 'dir')
 end
 
 %% pRF mapping runs
+ESCAPE_ABORT = false; %used to prematurely exit the script with Escape
 
 for run = 1:NRuns
-    
-    Bars(Subject, EyeTracking, Emulation, SubjPath);
+    if ~ESCAPE_ABORT
+        Bars(Subject, EyeTracking, Emulation, SubjPath);
+    else
+        return;
+    end
 
 end
 
