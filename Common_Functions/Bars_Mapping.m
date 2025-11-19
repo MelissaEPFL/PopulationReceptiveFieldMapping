@@ -46,10 +46,13 @@ end
 
 %Gamma correction
 PsychImaging('PrepareConfiguration'); %starts the setup for PsychImaging
-PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma'); % gamma-corrected display  
+PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma'); % gamma-corrected display 
+
+% THIS RAISES A WARNING ABOUT SYNCING WHEN THE SCRIPT IS RUN ON SECONDARY DISPLAY
+%Screen('Preference', 'SkipSyncTests', 1);
 
 %Open display window
-[Win, Rect] = PsychImaging('OpenWindow', Parameters.Screen, Parameters.Background, Parameters.Resolution, 32); 
+[Win, Rect] = PsychImaging('OpenWindow', Parameters.Screen, Parameters.Background, [], 32); 
 
 %Apply gamma correction
 PsychColorCorrection('SetEncodingGamma', Win, Parameters.Gamma); % Apply desired gamma correction
