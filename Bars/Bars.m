@@ -69,5 +69,10 @@ SaveAps = 1;
 % If it is 2 it saves a frame of the actual stimulus movie. 
 % If it is 0 (default) it doesn't save anything. 
 
+%% Info about setup
+Parameters.Psychtoolbox_Version = PsychtoolboxVersion;
+Parameters.Version_Matlab = '9.11.0.1769968 (R2021b)';
+Parameters.OS_Version = 'Microsoft Windows 10 Pro Version 10.0 (Build 19044)';
+
 %% Run the experiment
 Bars_Mapping(Parameters, Emulation, SaveAps, SubjPath);

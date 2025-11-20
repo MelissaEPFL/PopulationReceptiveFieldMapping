@@ -55,7 +55,7 @@ PsychImaging('PrepareConfiguration'); %starts the setup for PsychImaging
 PsychImaging('AddTask', 'FinalFormatting', 'DisplayColorCorrection', 'SimpleGamma'); % gamma-corrected display 
 
 % THIS RAISES A WARNING ABOUT SYNCING WHEN THE SCRIPT IS RUN ON SECONDARY DISPLAY
-%Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'SkipSyncTests', 1);
 
 %Open display window
 [Win, Rect] = PsychImaging('OpenWindow', Parameters.Screen, Parameters.Background, [], 32); 
@@ -77,6 +77,7 @@ Slack = RefreshDur / 2;
 
 %% Initialize Eyelink eyetracker 
 if Parameters.Eye_tracker 
+
     %Initialize connection
     if Eyelink('Initialize') ~= 0	
         error('Problem initialising the eyetracker!'); 
@@ -88,6 +89,11 @@ if Parameters.Eye_tracker
     %Save Eyelink data to
     EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
     Eyelink('Openfile', EyetrackingFile);  % Open a file on the eyetracker
+
+    %Save parameters
+    [~, Parameters.Version_Eyelink]=Eyelink('GetTrackerVersion');
+    Parameters.Eyetracking_System = "Eyelink1000Plus";
+    Parameters.Distance_Camera_Eye_cm = 100;
 
     %Starts recording and check status
     Eyelink('StartRecording');  % Start recording to the file
@@ -101,6 +107,12 @@ if Parameters.Eye_tracker
             Eye_used = Eye_params.LEFT_EYE;         
         end
     end
+
+    %% Calibrate Eyetracker if needed
+
+
+
+
 end
 
 %% Initialize various variables
