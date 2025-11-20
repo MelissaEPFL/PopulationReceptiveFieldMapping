@@ -43,9 +43,11 @@ Parameters.Language = Language;
 if strcmp(Parameters.Language, 'EN')
     Parameters.Welcome = 'Please fixate the blue dot at all times!';   % Welcome message
     Parameters.Instruction = 'Please press a button when it changes colour!';  % Instruction message
+    Parameters.Eyelink_Instructions = 'Calibration of the eyetracker';
 elseif strcmp(Parameters.Language, 'FR')
     Parameters.Welcome = 'Veuillez fixer le point bleu en permanence.';   % Welcome message
     Parameters.Instruction = 'Veuillez appuyer sur le bouton s´il change de couleur.';  % Instruction message
+    Parameters.Eyelink_Instructions = 'Calibration de l´eyetracker';
 end
 
 %% Experimental stimulus Parameters

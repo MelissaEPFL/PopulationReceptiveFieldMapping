@@ -75,43 +75,31 @@ RefreshDur = Screen('GetFlipInterval',Win);
 Frames_per_Sec = 1 / RefreshDur;
 Slack = RefreshDur / 2;
 
-%% Initialize Eyelink eyetracker 
+%% Initialize and calibrate Eyelink eyetracker 
 if Parameters.Eye_tracker 
-
-    %Initialize connection
-    if Eyelink('Initialize') ~= 0	
-        error('Problem initialising the eyetracker!'); 
-    end
-
-    %Set default parameters
-    Eye_params = EyelinkInitDefaults(Win);
-
-    %Save Eyelink data to
-    EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
-    Eyelink('Openfile', EyetrackingFile);  % Open a file on the eyetracker
 
     %Save parameters
     [~, Parameters.Version_Eyelink]=Eyelink('GetTrackerVersion');
     Parameters.Eyetracking_System = "Eyelink1000Plus";
     Parameters.Distance_Camera_Eye_cm = 100;
-
-    %Starts recording and check status
-    Eyelink('StartRecording');  % Start recording to the file
-    Eye_error = Eyelink('CheckRecording');
-
-    %Identify which eye is tracked
-    if Eyelink('NewFloatSampleAvailable') > 0
-        Eye_used = Eyelink('EyeAvailable'); % Get eye that's tracked
-        if Eye_used == Eye_params.BINOCULAR 
-            % If both eyes are tracked use left
-            Eye_used = Eye_params.LEFT_EYE;         
-        end
+    Parameters.screenXpixels = 1920;
+    Parameters.screenYpixels = 1080;
+    
+    if NEED_EYELINK_CALIBRATION
+        %Initialize and calibrate Eyelink using BBL code
+        CalibrateEyeLink(Parameters);
+        assignin('base', 'NEED_EYELINK_CALIBRATION', false); %Used to exit the main loop and properly exit the script
     end
 
-    %% Calibrate Eyetracker if needed
-
-
-
+    %Save Eyelink data to
+    EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
+    Eyelink('Openfile', EyetrackingFile);  % Open a file on the eyetracker
+    
+    %Starts recording and check status
+    Eyelink('StartRecording');  % Start recording to the file
+    Eyelink('Message', 'pRF_Mapping_Experiment');
+    Eyelink('Message', char('Subject '+Parameters.Subj_ID));
+    Eyelink('Message', char('Run number '+num2str(Parameters.Session)));
 
 end
 
@@ -283,6 +271,11 @@ k = 0;  % Toggle this when key was pressed recently
 
 %% Run stimulus sequence (Main loop)
 for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, condition)
+
+    if Emulate == false
+        %Send a trigger to eyelink at the beggining of every sweep
+        outp(Parameters.Scanner_Trigger_Address, 16);
+    end
     
     % Trial setup
     TrialOutput = struct;
@@ -292,13 +285,9 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
     %If using Eyetracker, this will store gaze data
     if Parameters.Eye_tracker
         TrialOutput.Eye = [];
+        Eyelink('Message', char('Sweep number '+ num2str(Trial)));
     end
-    
-    if Emulate == false
-        %Send a trigger to eyelink at the beggining of every sweep
-        outp(Parameters.Scanner_Trigger_Address, 16);
-    end
-
+  
     %% Stimulation sequence
 
     %Condition setup
@@ -479,7 +468,7 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
                 ep = Eye.pa(Eye_used+1);
 
                 % Store if data is valid 
-                if ex ~= Eye_params.MISSING_DATA && ey ~= Eye_params.MISSING_DATA && ep > 0
+                if ex ~= EL_params.MISSING_DATA && ey ~= EL_params.MISSING_DATA && ep > 0
                     TrialOutput.Eye = [TrialOutput.Eye; GetSecs-TrialOutput.TrialOnset ex ey ep];
                 end
             end
@@ -522,6 +511,7 @@ end
 
 % Shutdown eye tracker if used
 if Parameters.Eye_tracker
+    Eyelink('Message', 'End of run');
     Eyelink('StopRecording');
     Eyelink('CloseFile');
     Eyelink('ShutDown');
