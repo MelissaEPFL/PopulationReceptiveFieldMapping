@@ -15,12 +15,12 @@ info = inputdlg({'Subject ID','N runs', 'Language'});  %Language is 'FR' or 'EN'
 [Subject, NRuns, Language] = info{[1,2,3]};  
 NRuns = str2num(NRuns);
 
-EyeTracking = false; %Use eyetracking ?
-Emulation = true; %Emulate scanner trigger ?
+EyeTracking = true; %Use eyetracking ?
+Emulation = false; %Emulate scanner trigger ?
 
 %Define and if required create SaveFolder
-%SavePath = '..\Data  '
-SavePath = 'L:\Experimental Data\Melissa Faggella\4_fMRI_EEG_Forward_modelling\Results';
+SavePath = '..\Data  '
+%SavePath = 'L:\Experimental Data\Melissa Faggella\4_fMRI_EEG_Forward_modelling\Results';
 SubjPath = [SavePath filesep Subject];
 if ~exist(SubjPath, 'dir')
     mkdir(SubjPath);           

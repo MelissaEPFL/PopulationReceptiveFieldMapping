@@ -86,6 +86,12 @@ if Parameters.Eye_tracker
     Parameters.screenYpixels = 1080;
     
     if NEED_EYELINK_CALIBRATION
+        %Briefly show screen to inform participant
+        Screen('FillRect', Win, Parameters.Background);
+        DrawFormattedText(Win, Parameters.Eyelink_Instructions, 'center', 'center', Parameters.Foreground);
+        Screen('Flip', Win);         
+        WaitSecs(1);
+
         %Initialize and calibrate Eyelink using BBL code
         CalibrateEyeLink(Parameters);
         assignin('base', 'NEED_EYELINK_CALIBRATION', false); %Used to exit the main loop and properly exit the script
