@@ -11,8 +11,8 @@ clear all; clc;
 %% Input info
 
 % Ask experimenter basic info
-info = inputdlg({'Subject ID','N runs'});  
-[Subject, NRuns] = info{[1,2]};  
+info = inputdlg({'Subject ID','N runs', 'Language'});  %Language is 'FR' or 'EN'
+[Subject, NRuns, Language] = info{[1,2,3]};  
 NRuns = str2num(NRuns);
 
 EyeTracking = false; %Use eyetracking ?
@@ -28,10 +28,11 @@ end
 
 %% pRF mapping runs
 ESCAPE_ABORT = false; %used to prematurely exit the script with Escape
+NEED_EYELINK_CALIBRATION = true;
 
 for run = 1:NRuns
     if ~ESCAPE_ABORT
-        Bars(Subject, EyeTracking, Emulation, SubjPath);
+        Bars(Subject, EyeTracking, Emulation, Language, SubjPath);
     else
         return;
     end

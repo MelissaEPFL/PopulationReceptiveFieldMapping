@@ -31,12 +31,18 @@ end
 %% Configure scanner 
 if Emulate 
     % Emulate scanner
-    TrigStr = 'Appuyez sur un bouton pour commencer...';    % Trigger string
-    %TrigStr = 'Press key to start...';    % Trigger string
+    if strcmp(Parameters.Language, 'EN')
+        TrigStr = 'Press key to start...';    % Trigger string
+    elseif strcmp(Parameters.Language, 'FR')
+        TrigStr = 'Appuyez sur un bouton pour commencer...';    % Trigger string
+    end
 else
     % Real scanner
-    TrigStr = 'Le scan va commencer...';    % Trigger string
-    %TrigStr = 'Stand by for scan...';    % Trigger string
+    if strcmp(Parameters.Language, 'EN')
+        TrigStr = 'Stand by for scan...';    % Trigger string
+    elseif strcmp(Parameters.Language, 'FR')
+        TrigStr = 'Le scan va commencer...';    % Trigger string
+    end
 end
 
 %% Initialize PTB
@@ -483,7 +489,13 @@ Parameters = rmfield(Parameters, 'Stimulus');  %We ignore the stimulus field bec
 
 %Display a saving in progress screen 
 Screen('FillRect', Win, Parameters.Background, Rect);
-DrawFormattedText(Win, 'Sauvegarde des données en cours...', 'center', 'center', Parameters.Foreground); 
+
+if strcmp(Parameters.Language,'EN')
+   DrawFormattedText(Win, 'Saving the data...', 'center', 'center', Parameters.Foreground); 
+elseif strcmp(Parameters.Language, 'FR')
+   DrawFormattedText(Win, 'Sauvegarde des données en cours...', 'center', 'center', Parameters.Foreground); 
+end
+
 Screen('Flip', Win);
 
 %Saves all workspace variables in a .mat file
@@ -505,7 +517,12 @@ end
 
 %% Display Farewell screen
 Screen('FillRect', Win, Parameters.Background, Rect);
-DrawFormattedText(Win, 'Merci pour ta participation :) !', 'center', 'center', Parameters.Foreground); 
+if strcmp(Parameters.Language,'EN')
+   DrawFormattedText(Win, 'Thank you for participating :) !', 'center', 'center', Parameters.Foreground); 
+elseif strcmp(Parameters.Language, 'FR')
+   DrawFormattedText(Win, 'Merci pour ta participation :) !', 'center', 'center', Parameters.Foreground); 
+end
+
 Screen('Flip', Win);
 WaitSecs(Parameters.TR * Parameters.Overrun);
 ShowCursor;

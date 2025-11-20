@@ -1,4 +1,4 @@
- function Bars(Subject_ID, EyeTracking, Emulation, SubjPath)
+function Bars(Subject_ID, EyeTracking, Emulation, Language, SubjPath)
 % Retinotopic (pRF) mapping using a traversing bar stimulus. 
 %
 % Input arguments:
@@ -8,9 +8,13 @@
 %
 
 addpath('..\Common_Functions');
+
+Parameters = struct;    % Initialize the parameters variable
+
 Stim = 'Ripples'; % Use ripple stimulus
 %Stim = 'Checkerboard'; % Use checkerboard stimulus
-Parameters = struct;    % Initialize the parameters variable
+
+Parameters.Stimulus_Type = Stim;
 
 %% Engine & Screen parameters
 Parameters.Screen = 2;    % Main screen (For BBL IRM screen = 2)
@@ -25,7 +29,7 @@ Parameters.TR = 1;   % Seconds per volume
 if Emulation
     Parameters.Dummies = 0;   % No dummy volumes
 else
-    Parameters.Dummies = 10;   % Dummy volumes (no need in BBL)
+    Parameters.Dummies = 0;   % Dummy volumes (we don't need any in BBL)
 end
 Parameters.Overrun = 0;   % Dummy volumes at the end
 Parameters.Eye_tracker = EyeTracking; % Using eye tracker?
@@ -34,10 +38,15 @@ Parameters.Eye_tracker = EyeTracking; % Using eye tracker?
 Parameters.Subj_ID = Subject_ID;   % Subject ID
 [Parameters.Session, Parameters.Session_name] = CurrentSession([Parameters.Subj_ID '_Run'], SubjPath);   % Determines which is the current run by looking at files names
 
-Parameters.Welcome = 'Veuillez fixer le point bleu en permanence.';   % Welcome message
-Parameters.Instruction = 'Veuillez appuyer sur le bouton s´il change de couleur.';  % Instruction message
-%Parameters.Welcome = 'Please fixate the blue dot at all times!';   % Welcome message
-%Parameters.Instruction = 'Please press a button when it changes colour!';  % Instruction message
+Parameters.Language = Language;
+
+if strcmp(Parameters.Language, 'EN')
+    Parameters.Welcome = 'Please fixate the blue dot at all times!';   % Welcome message
+    Parameters.Instruction = 'Please press a button when it changes colour!';  % Instruction message
+elseif strcmp(Parameters.Language, 'FR')
+    Parameters.Welcome = 'Veuillez fixer le point bleu en permanence.';   % Welcome message
+    Parameters.Instruction = 'Veuillez appuyer sur le bouton s´il change de couleur.';  % Instruction message
+end
 
 %% Experimental stimulus Parameters
 Parameters.Volumes_per_Trial = 25;  % Duration of trial (sweep) in volumes (of duration TR)
