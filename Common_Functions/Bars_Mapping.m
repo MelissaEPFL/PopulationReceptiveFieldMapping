@@ -85,20 +85,21 @@ if Parameters.Eye_tracker
     Parameters.screenXpixels = 1920;
     Parameters.screenYpixels = 1080;
     
-    if NEED_EYELINK_CALIBRATION
+    if Parameters.Session == 1 %We only calibrate session 1
         %Briefly show screen to inform participant
         Screen('FillRect', Win, Parameters.Background);
         DrawFormattedText(Win, Parameters.Eyelink_Instructions, 'center', 'center', Parameters.Foreground);
         Screen('Flip', Win);         
         WaitSecs(1);
-
+    
         %Initialize and calibrate Eyelink using BBL code
-        CalibrateEyeLink(Parameters);
+        CalibrateEyeLink(Parameters, Win);
         assignin('base', 'NEED_EYELINK_CALIBRATION', false); %Used to exit the main loop and properly exit the script
     end
 
     %Save Eyelink data to
-    EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
+%     EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
+    EyetrackingFile = ['EL' num2str(Parameters.Session)];
     Eyelink('Openfile', EyetrackingFile);  % Open a file on the eyetracker
     
     %Starts recording and check status
@@ -466,19 +467,19 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
         CurrVolume = floor((GetSecs-TrialOutput.TrialOnset-Slack) / Parameters.TR) + 1;
 
         % Record eye data
-        if Parameters.Eye_tracker %If we use the eyetracker
-            if Eyelink( 'NewFloatSampleAvailable') > 0 %Check if a new sample is available
-                Eye = Eyelink( 'NewestFloatSample');
-                ex = Eye.gx(Eye_used+1); % If so extract gaze coordinates 
-                ey = Eye.gy(Eye_used+1);
-                ep = Eye.pa(Eye_used+1);
-
-                % Store if data is valid 
-                if ex ~= EL_params.MISSING_DATA && ey ~= EL_params.MISSING_DATA && ep > 0
-                    TrialOutput.Eye = [TrialOutput.Eye; GetSecs-TrialOutput.TrialOnset ex ey ep];
-                end
-            end
-        end
+%         if Parameters.Eye_tracker %If we use the eyetracker
+%             if Eyelink( 'NewFloatSampleAvailable') > 0 %Check if a new sample is available
+%                 Eye = Eyelink( 'NewestFloatSample');
+%                 ex = Eye.gx(Eye_used+1); % If so extract gaze coordinates 
+%                 ey = Eye.gy(Eye_used+1);
+%                 ep = Eye.pa(Eye_used+1);
+% 
+%                 % Store if data is valid 
+%                 if ex ~= EL_params.MISSING_DATA && ey ~= EL_params.MISSING_DATA && ep > 0
+%                     TrialOutput.Eye = [TrialOutput.Eye; GetSecs-TrialOutput.TrialOnset ex ey ep];
+%                 end
+%             end
+%         end
     end
     
     % Trial end time (Sweep is over)

@@ -1,11 +1,11 @@
-function [] = CalibrateEyeLink(Parameters)
+function [] = CalibrateEyeLink(Parameters, Win)
 
 % Provide Eyelink with details about the graphics environment and perform some initializations.
-eye = EyelinkInitDefaults(screenData.window);
+eye = EyelinkInitDefaults(Win);
 
 % adjust some of the defaults to my setup
-eye.backgroundcolour  = screenData.backgroundColor/255;
-eye.foregroundcolour = screenData.backgroundColor/255;
+eye.backgroundcolour  = Parameters.Background/255;
+eye.foregroundcolour = Parameters.Foreground/255;
 eye.msgfontcolour = [0.8*255 0 0];
 eye.imgtitlecolour = [0.8*255 0 0];
 eye.calibrationtargetcolour = [0.8*255 0 0];

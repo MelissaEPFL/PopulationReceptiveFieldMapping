@@ -15,11 +15,11 @@ info = inputdlg({'Subject ID','N runs', 'Language'});  %Language is 'FR' or 'EN'
 [Subject, NRuns, Language] = info{[1,2,3]};  
 NRuns = str2num(NRuns);
 
-EyeTracking = true; %Use eyetracking ?
+EyeTracking = false; %Use eyetracking ?
 Emulation = false; %Emulate scanner trigger ?
 
 %Define and if required create SaveFolder
-SavePath = '..\Data  '
+SavePath = '..\Data';
 %SavePath = 'L:\Experimental Data\Melissa Faggella\4_fMRI_EEG_Forward_modelling\Results';
 SubjPath = [SavePath filesep Subject];
 if ~exist(SubjPath, 'dir')
@@ -27,8 +27,7 @@ if ~exist(SubjPath, 'dir')
 end
 
 %% pRF mapping runs
-ESCAPE_ABORT = false; %used to prematurely exit the script with Escape
-NEED_EYELINK_CALIBRATION = true;
+assignin('base', 'ESCAPE_ABORT', false);%used to prematurely exit the script with Escape
 
 for run = 1:NRuns
     if ~ESCAPE_ABORT

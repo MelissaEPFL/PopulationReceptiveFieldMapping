@@ -17,7 +17,7 @@ Stim = 'Ripples'; % Use ripple stimulus
 Parameters.Stimulus_Type = Stim;
 
 %% Engine & Screen parameters
-Parameters.Screen = 2;    % Main screen (For BBL IRM screen = 2)
+Parameters.Screen = 2; % Main screen (For BBL IRM screen = 2)  
 Parameters.Resolution = [0 0 1920 1080];   % Resolution (At BBL its 1920 x 1080)
 Parameters.Foreground = [0 0 0];  % Foreground colour
 Parameters.Background = [127 127 127];    % Background colour
@@ -54,6 +54,7 @@ end
 Parameters.Volumes_per_Trial = 25;  % Duration of trial (sweep) in volumes (of duration TR)
 Parameters.Bar_Width = 60; % Width of bar in pixels
 Parameters.Fringe = 12; % Width of ramped fringe of bar in pixels
+%Parameters.Conditions = [0];
 Parameters.Conditions = [0 45 90 135 NaN 180 225 270 315 NaN];  % Bar orientation in each sweep 
 Parameters.Prob_of_Event = 0.01;  % Probability of a target event (color change fixation cross)
 Parameters.Event_Duration = 0.2;  % Duration of a target event
