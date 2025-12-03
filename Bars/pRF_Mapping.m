@@ -15,7 +15,8 @@ info = inputdlg({'Subject ID','N runs', 'Language'});  %Language is 'FR' or 'EN'
 [Subject, NRuns, Language] = info{[1,2,3]};  
 NRuns = str2num(NRuns);
 
-EyeTracking = false; %Use eyetracking ?
+EyeTracking = true; %Use eyetracking ?
+AutoEyetracker = false; %whether to use autoeyetracker script from BBL
 Emulation = false; %Emulate scanner trigger ?
 
 %Define and if required create SaveFolder
@@ -27,7 +28,9 @@ if ~exist(SubjPath, 'dir')
 end
 
 %% Eyelink calibration
-AutoEyeTracker();
+if AutoEyetracker
+    AutoEyeTracker();
+end
 
 %% pRF mapping runs
 assignin('base', 'ESCAPE_ABORT', false);%used to prematurely exit the script with Escape

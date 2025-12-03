@@ -85,17 +85,19 @@ if Parameters.Eye_tracker
     Parameters.screenXpixels = 1920;
     Parameters.screenYpixels = 1080;
     
-    % if Parameters.Session == 1 % Eyelink calibration
-    %     %Briefly show screen to inform participant
-    %     Screen('FillRect', Win, Parameters.Background);
-    %     DrawFormattedText(Win, Parameters.Eyelink_Instructions, 'center', 'center', Parameters.Foreground);
-    %     Screen('Flip', Win);         
-    %     WaitSecs(1);
-    % 
-    %     %Initialize and calibrate Eyelink using BBL code
-    %     CalibrateEyeLink(Parameters, Win);
-    %     assignin('base', 'NEED_EYELINK_CALIBRATION', false); %Used to exit the main loop and properly exit the script
-    % end
+    if Parameters.Session == 1 % Eyelink calibration
+        if ~AutoEyetracker
+            %Briefly show screen to inform participant
+            Screen('FillRect', Win, Parameters.Background);
+            DrawFormattedText(Win, Parameters.Eyelink_Instructions, 'center', 'center', Parameters.Foreground);
+            Screen('Flip', Win);         
+            WaitSecs(1);
+    
+            %Initialize and calibrate Eyelink using BBL code
+            CalibrateEyeLink(Parameters, Win);
+            assignin('base', 'NEED_EYELINK_CALIBRATION', false); %Used to exit the main loop and properly exit the script
+        end
+    end
 
     %Save Eyelink data to
     EyetrackingFile = [SubjPath filesep 'el_' num2str(Parameters.Session, '%02.f') '.edf'];
