@@ -98,7 +98,7 @@ if Parameters.Eye_tracker
     end
 
     %Save Eyelink data to
-    EyetrackingFile = ['el_' num2str(Parameters.Session, '%02.f') '.edf'];
+    EyetrackingFile = [SubjPath filesep 'el_' num2str(Parameters.Session, '%02.f') '.edf'];
 
     %Verify file name is short enough because eyelink wants < 8 characters
     [~, fname, ~] = fileparts(EyetrackingFile);
@@ -223,6 +223,9 @@ if bk(KeyCodes.Escape) % Abort if Escape is pressed during standby phase
     %Restore system 
     ShowCursor;
     Screen('CloseAll');
+
+    %Stop recording command window
+    diary off
 
     %Log message
     disp(' ');
@@ -439,6 +442,9 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
             Screen('CloseAll');
             disp(' ');
 
+            %Stop recording command window
+            diary off
+
             %Display log message
             disp('Experiment aborted by user mid-block!'); 
             disp(' ');
@@ -527,7 +533,7 @@ if Parameters.Eye_tracker
         fprintf('Problem receiving data file ''%s''\n', EyetrackingFile);
         rdf;
     end
-    
+
     Eyelink('ShutDown');
 end
 
