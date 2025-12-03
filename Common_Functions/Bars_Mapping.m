@@ -526,7 +526,7 @@ if Parameters.Eye_tracker
         if status > 0
             fprintf('ReceiveFile status %d\n', status);
         end
-        if 2 == exist(eyeFile_name, 'file')
+        if 2 == exist(EyetrackingFile, 'file')
             fprintf('Data file ''%s'' can be found in ''%s''\n', EyetrackingFile, pwd);
         end
     catch rdf
