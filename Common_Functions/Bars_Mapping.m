@@ -81,7 +81,7 @@ if Parameters.Eye_tracker
     %Save parameters
     [~, Parameters.Version_Eyelink]=Eyelink('GetTrackerVersion');
     Parameters.Eyetracking_System = "Eyelink1000Plus";
-    Parameters.Distance_Camera_Eye_cm = 100;
+    %Parameters.Distance_Camera_Eye_cm = 999;
     Parameters.screenXpixels = 1920;
     Parameters.screenYpixels = 1080;
     
@@ -98,7 +98,7 @@ if Parameters.Eye_tracker
     end
 
     %Save Eyelink data to
-    EyetrackingFile = ['el' num2str(Parameters.Session, '%02.f') '.edf'];
+    EyetrackingFile = ['el_' num2str(Parameters.Session, '%02.f') '.edf'];
 
     %Verify file name is short enough because eyelink wants < 8 characters
     [~, fname, ~] = fileparts(EyetrackingFile);
@@ -471,21 +471,6 @@ for Trial = 1 : length(Parameters.Conditions) %For each sweep (orientation, cond
     
         % Determine current volume to synchronize visual stimulus with fMRI
         CurrVolume = floor((GetSecs-TrialOutput.TrialOnset-Slack) / Parameters.TR) + 1;
-
-        % Record eye data
-%         if Parameters.Eye_tracker %If we use the eyetracker
-%             if Eyelink( 'NewFloatSampleAvailable') > 0 %Check if a new sample is available
-%                 Eye = Eyelink( 'NewestFloatSample');
-%                 ex = Eye.gx(Eye_used+1); % If so extract gaze coordinates 
-%                 ey = Eye.gy(Eye_used+1);
-%                 ep = Eye.pa(Eye_used+1);
-% 
-%                 % Store if data is valid 
-%                 if ex ~= EL_params.MISSING_DATA && ey ~= EL_params.MISSING_DATA && ep > 0
-%                     TrialOutput.Eye = [TrialOutput.Eye; GetSecs-TrialOutput.TrialOnset ex ey ep];
-%                 end
-%             end
-%         end
     end
     
     % Trial end time (Sweep is over)
@@ -527,6 +512,22 @@ if Parameters.Eye_tracker
     Eyelink('Message', 'End of run');
     Eyelink('StopRecording');
     Eyelink('CloseFile');
+
+    % download data file
+    try
+        fprintf('Receiving Eyelink data file ''%s''\n', EyetrackingFile);
+        status=Eyelink('ReceiveFile');
+        if status > 0
+            fprintf('ReceiveFile status %d\n', status);
+        end
+        if 2 == exist(eyeFile_name, 'file')
+            fprintf('Data file ''%s'' can be found in ''%s''\n', EyetrackingFile, pwd);
+        end
+    catch rdf
+        fprintf('Problem receiving data file ''%s''\n', EyetrackingFile);
+        rdf;
+    end
+    
     Eyelink('ShutDown');
 end
 
