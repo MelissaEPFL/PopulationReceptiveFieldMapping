@@ -98,8 +98,14 @@ if Parameters.Eye_tracker
     end
 
     %Save Eyelink data to
-%     EyetrackingFile = [SubjPath filesep 'EL' num2str(Parameters.Session) '.edf'];
-    EyetrackingFile = ['EL' num2str(Parameters.Session)];
+    EyetrackingFile = ['el' num2str(Parameters.Session, '%02.f') '.edf'];
+
+    %Verify file name is short enough because eyelink wants < 8 characters
+    [~, fname, ~] = fileparts(EyetrackingFile);
+    if length(fname) > 8
+        disp('WARNING: Eyelink file name too long');
+    end
+
     Eyelink('Openfile', EyetrackingFile);  % Open a file on the eyetracker
     
     %Starts recording and check status
