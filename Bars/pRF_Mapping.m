@@ -26,15 +26,26 @@ if ~exist(SubjPath, 'dir')
     mkdir(SubjPath);           
 end
 
+%% Eyelink calibration
+AutoEyeTracker();
+
 %% pRF mapping runs
 assignin('base', 'ESCAPE_ABORT', false);%used to prematurely exit the script with Escape
 
 for run = 1:NRuns
+
+    %Saves what is displayed in the command window
+    diary_filename = [SubjPath filesep 'logs_' num2str(run) '.txt'];
+    diary(diary_filename)
+
     if ~ESCAPE_ABORT
         Bars(Subject, EyeTracking, Emulation, Language, SubjPath);
     else
         return;
     end
+
+    %Stops saving what is in the command window
+    diary off
 
 end
 
